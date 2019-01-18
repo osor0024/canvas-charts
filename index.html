@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Canvas Assignment</title>
+<style>
+canvas{
+    border: 2px solid black;
+    width: 90%;
+    max-width: 1000px;
+    display : block;
+    margin : auto;
+    margin-bottom: 1rem;
+  
+}
+</style>
+</head>
+<body>
+    <canvas id="canvas pie"></canvas>
+    <canvas id="canvas arc"></canvas>
+    <script>
+    let canvas, ctx;
+
+    document.addEventListener("DOMContentLoaded", (ev) => {
+  
+            getData();
+
+        });
+
+
+        function getData() {
+            fetch("./data.json").then(response => {
+                return response.json();
+            }).then(data => {
+                buildPie(data);
+                buildArc(data);
+
+            }).catch(err => {
+                console.log("ERROR!!");
+            });
+        }
+
+        function buildPie(data) {
+
+            canvas = document.getElementById("canvas pie");
+            ctx = canvas.getContext('2d');
+            canvas.width = 800;
+            canvas.height = 600;
+            let total = data.reduce((ttl, food) => {
+                return ttl + food.number
+            }, 0);
+            let startAngle = 0;
+            let radius = 120;
+            let cx = canvas.width / 2;
+            let cy = canvas.height / 2;
+            console.log(total);
+
+            data.forEach(food => {
+                let p = food.number/total * 100;
+                ctx.lineWidth = 1;
+                ctx.fillStyle = food.colour;
+                ctx.strokeStyle = '#333';
+                ctx.beginPath();
+                let endAngle = ((food.number / total) * Math.PI * 2) + startAngle;
+                ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, radius, startAngle, endAngle, false);
+                ctx.lineTo(cx, cy);
+                ctx.fill();
+                ctx.stroke();
+                ctx.closePath();
+
+
+
+                ctx.beginPath();
+                ctx.font = '17px Helvetica, Calibri';
+                ctx.textAlign = 'center';
+                ctx.fillStyle = 'black';
+                
+                let theta = (startAngle + endAngle) / 2;
+                let deltaY = Math.sin(theta) * 1.5 * radius;
+                let deltaX = Math.cos(theta) * 1.5 * radius;
+    
+                ctx.fillText(food.food_name + " "+ p + "%", deltaX + cx, deltaY + cy);
+                ctx.closePath();
+
+
+                startAngle = endAngle;
+            });
+
+        }
+        
+
+        function buildArc(data) {
+            
+            canvas = document.getElementById("canvas arc");
+            ctx = canvas.getContext('2d');
+            canvas.width = 800;
+            canvas.height = 600;
+            let total = data.reduce((ttl, food) => {
+                return ttl + food.number
+            }, 0);
+            let startAngle = Math.PI;
+            let radius =40;
+            let cx = canvas.width/2;
+            let cy = canvas.height/2;
+            
+            data.sort( (a,b) =>{
+                if( a.number > b.number){
+                    return 1
+                }else if(a.number < b.number){
+                    return -1
+                }else{
+                    return 0;
+                }
+            });
+
+            data.forEach( food =>{
+                
+                let p = food.number/total * 100;    
+                let endAngle = startAngle + ((food.number/total) * (Math.PI * 2));
+                
+                ctx.moveTo(cx+radius, cy);
+                ctx.beginPath();
+                ctx.strokeStyle = food.colour;
+                ctx.lineWidth = 20;
+                ctx.arc(cx, cy, radius, startAngle, endAngle, false); 
+                ctx.stroke();
+                ctx.closePath();
+                
+                radius += 30;
+
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.font = '17px Helvetica, Calibri';
+                ctx.textAlign = 'start';
+                ctx.fillStyle = 'black';
+                ctx.translate (cx-radius+23,cy+10)
+                ctx.rotate(Math.PI/2);
+                ctx.fillText(food.food_name + " "+ p + "%", 0, 0 );
+                ctx.fill();
+                ctx.closePath();
+                ctx.restore();
+            
+            });
+            }
+          
+            
+
+        
+    </script>
+</body>
+</html>
+
+
+
+

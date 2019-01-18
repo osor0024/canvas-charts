@@ -1,0 +1,39 @@
+ [{
+                "id": 566,
+                "food_name": "Pizza",
+                "number": 40,
+                "colour": "gold"
+  },
+  {
+    "id": 571,
+    "food_name": "Hamburger",
+    "number": 9,
+    "colour": "pink"
+},
+            {
+                "id": 568,
+                "food_name": "Sushi",
+                "number": 10,
+                "colour": "blue"
+  },
+            
+            {
+                "id": 570,
+                "food_name": "Quesadilla",
+                "number": 6,
+                "colour": "grey"
+  },
+            
+            {
+                "id": 572,
+                "food_name": "Pasta",
+                "number": 15,
+                "colour": "green"
+  },
+  {
+    "id": 569,
+    "food_name": "Tacos",
+    "number": 20,
+    "colour": "red"
+}
+]
